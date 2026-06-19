@@ -1,0 +1,22 @@
+.vercel
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Generated files (not needed on Vercel)
+contributions.svg
+contributions.json
+
+# Local output
+output/
