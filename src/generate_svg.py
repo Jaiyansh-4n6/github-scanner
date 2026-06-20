@@ -1,34 +1,23 @@
-import os
-import random
-import json
-from datetime import datetime
-
 USERNAME = "Jaiyansh-4n6"
 
-def generate_svg(contribution_data):
+def generate_svg(contribution_data, total_contributions, month_labels, latest_date):
+  position_map = {}
+  for item in contribution_data:
+      position_map[(item["col"], item["row"])] = item["level"]
 
-    contribution_data.sort(
-        key=lambda x: datetime.strptime(
-            x["date"],
-            "%Y-%m-%d"
-        )
-    )
 
-    levels = [item["level"] for item in contribution_data]
-
-def generate_svg(contribution_data):
 # Grid Settings
-  x_start = 80
+  x_start = 100
   y_start = 130
   cell    = 16
   gap     = 5
   step    = cell + gap
-  cols    = 53
-  rows    = 7
+  cols = max(item["col"] for item in contribution_data) + 1
+  rows = 7
 
-  canvas_w    = 1220
+  canvas_w = x_start + cols * step + 120
   canvas_h    = 370
-  scan_travel = (cols - 1) * step   # 1071px
+  scan_travel = cols * step - cell
 
   beam_h_top  = y_start - 10
   beam_h_bot  = y_start + (rows - 1) * step + cell + 10
@@ -98,10 +87,19 @@ def generate_svg(contribution_data):
 
   # ── HEADER ────────────────────────────────────────────────────────────────────
   svg_parts.append('''<!-- Header -->
-  <text x="40" y="44" fill="#00ff88" font-size="26" font-weight="bold"
+  <text x="45" y="44" fill="#00ff88" font-size="26" font-weight="bold"
         filter="url(#textGlow)" letter-spacing="3">&gt; CONTRIBUTION GRAPH   </text>
-
   ''')
+  svg_parts.append(
+    f'<text x="100" y="80" fill="#9cffc5" font-size="18">'
+    f'{total_contributions} contributions in the last year'
+    f'</text>'
+)
+  svg_parts.append(
+    f'<text x="100" y="105" fill="#6ddfa8" font-size="12">'
+    f'Last Updated: {latest_date}'
+    f'</text>'
+)
 
   # ── DAY LABELS ────────────────────────────────────────────────────────────────
   days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -109,34 +107,17 @@ def generate_svg(contribution_data):
       svg_parts.append(f'<text x="16" y="{y_start + i*step + 12}" fill="#00ff88" font-size="13" font-weight="bold">{day}</text>\n')
 
   # ── MONTH LABELS ──────────────────────────────────────────────────────────────
-  from datetime import datetime
+  month_y = y_start - 18
+  month_step = cols / max(len(month_labels), 1)
+  for i, month in enumerate(month_labels):
+    x = x_start + (i * month_step * step)
+    svg_parts.append(
+        f'<text x="{x}" y="{month_y}" '
+        f'fill="#00ff88" '
+        f'font-size="13" '
+        f'font-weight="bold">  {month}</text>\n'
+    )
 
-  month_positions = {}
-
-  for idx, item in enumerate(contribution_data):
-
-      date = datetime.strptime(
-          item["date"],
-          "%Y-%m-%d"
-      )
-
-      month = date.strftime("%b")
-
-      week = idx // 7
-
-      if month not in month_positions:
-          month_positions[month] = week
-
-  for month, week in month_positions.items():
-
-      x = x_start + week * step
-
-      svg_parts.append(
-          f'<text x="{x}" y="{y_start - 16}" '
-          f'fill="#00ff88" font-size="13" font-weight="bold">{month}</text>\n'
-      )
-
-  levels = [item["level"] for item in contribution_data]
 
   # ── CONTRIBUTION GRID WITH SYNCED GLOW ────────────────────────────────────────
   #
@@ -160,12 +141,7 @@ def generate_svg(contribution_data):
 
   for col in range(cols):
       for row in range(rows):
-          index = col * rows + row
-
-          if index < len(levels):
-              level = levels[index]
-          else:
-              level = 0
+          level = position_map.get((col, row), 0)
 
           x = x_start + col * step
           y = y_start + row * step
@@ -300,6 +276,15 @@ def generate_svg(contribution_data):
   </g>
 
   ''')
+  svg_parts.append(f"""
+<text x="40" y="{canvas_h - 20}"
+      fill="#00ff88"
+      font-size="14">
+Status: SCANNING   |   User: {USERNAME}   |   Target: Commits
+</text>
+
+</svg>
+""")
   svg_out = "".join(svg_parts)
   return svg_out  
 
