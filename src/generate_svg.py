@@ -1,6 +1,6 @@
 USERNAME = "Jaiyansh-4n6"
 
-def generate_svg(contribution_data, total_contributions, latest_date, month_labels):
+def generate_svg(contribution_data, total_contributions, generated_at, month_labels):
   position_map = {}
   for item in contribution_data:
       position_map[(item["col"], item["row"])] = item["level"]
@@ -97,7 +97,7 @@ def generate_svg(contribution_data, total_contributions, latest_date, month_labe
 )
   svg_parts.append(
     f'<text x="100" y="100" fill="#6ddfa8" font-size="12">'
-    f'Last Updated: {latest_date}'
+    f'Data Refreshed: {generated_at}'
     f'</text>'
 )
 

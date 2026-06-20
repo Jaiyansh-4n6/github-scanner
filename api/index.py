@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from src.generate_svg import generate_svg
 import re
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -15,6 +16,10 @@ def scanner():
 
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
+
+    generated_at = datetime.now().strftime(
+    "%Y-%m-%d %H:%M:%S"
+)
 
     month_labels = []
 
@@ -46,7 +51,7 @@ def scanner():
     for item in contribution_data
 )
 
-    svg = generate_svg(contribution_data,total_contributions,latest_date,month_labels)
+    svg = generate_svg(contribution_data, total_contributions, generated_at, month_labels)
 
     return Response(
         svg,
