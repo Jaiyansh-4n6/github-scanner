@@ -1,6 +1,6 @@
 USERNAME = "Jaiyansh-4n6"
 
-def generate_svg(contribution_data, total_contributions, month_labels, latest_date):
+def generate_svg(contribution_data, total_contributions, latest_date, month_labels):
   position_map = {}
   for item in contribution_data:
       position_map[(item["col"], item["row"])] = item["level"]
@@ -96,7 +96,7 @@ def generate_svg(contribution_data, total_contributions, month_labels, latest_da
     f'</text>'
 )
   svg_parts.append(
-    f'<text x="100" y="105" fill="#6ddfa8" font-size="12">'
+    f'<text x="100" y="100" fill="#6ddfa8" font-size="12">'
     f'Last Updated: {latest_date}'
     f'</text>'
 )
@@ -107,7 +107,7 @@ def generate_svg(contribution_data, total_contributions, month_labels, latest_da
       svg_parts.append(f'<text x="16" y="{y_start + i*step + 12}" fill="#00ff88" font-size="13" font-weight="bold">{day}</text>\n')
 
   # ── MONTH LABELS ──────────────────────────────────────────────────────────────
-  month_y = y_start - 18
+  month_y = y_start - 5
   month_step = cols / max(len(month_labels), 1)
   for i, month in enumerate(month_labels):
     x = x_start + (i * month_step * step)
