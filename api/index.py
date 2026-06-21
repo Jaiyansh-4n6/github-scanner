@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from src.generate_svg import generate_svg
 import re
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 app = Flask(__name__)
 
@@ -17,9 +18,7 @@ def scanner():
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
 
-    generated_at = datetime.now().strftime(
-    "%Y-%m-%d %H:%M:%S"
-)
+    generated_at = datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%Y-%m-%d %H:%M:%S IST")
 
     month_labels = []
 
@@ -46,12 +45,61 @@ def scanner():
                 "col": col_index,
                 "date": cell["data-date"],
                 "level": int(cell["data-level"])})
-    latest_date = max(
-    item["date"]
-    for item in contribution_data
-)
+    
+    active_days = sum(
+        1 for item in contribution_data
+        if item["level"] > 0
+    )
 
-    svg = generate_svg(contribution_data, total_contributions, generated_at, month_labels)
+    days = sorted(
+        contribution_data,
+        key=lambda x: x["date"]
+    )
+
+    longest_streak = 0
+    current_streak = 0
+    streak = 0
+    longest_start = ""
+    longest_end = ""
+    temp_start = ""
+
+    for day in days:
+        if day["level"] > 0:
+            if streak == 0:
+                temp_start = day["date"]
+            streak += 1
+
+            if streak > longest_streak:
+                longest_streak = streak
+                longest_start = temp_start
+                longest_end = day["date"]
+
+        else:
+            streak = 0
+
+    current_end = ""
+    current_start = ""
+
+    for day in reversed(days):
+        if day["level"] > 0:
+            if current_streak == 0:
+                current_end = day["date"]
+
+            current_streak += 1
+            current_start = day["date"]
+
+        else:
+            break
+
+    current_start = datetime.strptime(current_start, "%Y-%m-%d").strftime("%b %d")
+    current_end = datetime.strptime(current_end, "%Y-%m-%d").strftime("%b %d")
+
+    longest_start = datetime.strptime(longest_start, "%Y-%m-%d").strftime("%b %d")
+    longest_end = datetime.strptime(longest_end, "%Y-%m-%d").strftime("%b %d")
+
+    svg = generate_svg(contribution_data, total_contributions, generated_at,
+                    month_labels, current_streak, longest_streak, active_days,
+                    current_start, current_end, longest_start, longest_end)
 
     return Response(
         svg,
