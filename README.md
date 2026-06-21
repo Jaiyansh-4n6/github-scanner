@@ -1,6 +1,6 @@
 # GitHub Contribution Scanner
 
-A live cyber-themed GitHub contribution visualizer that fetches real contribution data directly from GitHub and renders it as an animated SVG scanner.
+A GitHub contribution visualizer that fetches real contribution data from GitHub and renders it as an animated SVG scanner with contribution analytics.
 
 ## Preview
 
@@ -16,40 +16,49 @@ https://github-scanner-psi.vercel.app
 
 ---
 
-
 ## Features
 
-- Live GitHub contribution data
-- Automatic daily updates
-- Rolling 365-day contribution window
-- Animated scanner beam effect
-- Contribution count display
-- Month labels
-- Last updated timestamp
-- SVG-based rendering
-- Vercel deployment
+* Live GitHub contribution data
+* Animated scanner beam effect
+* Rolling 365-day contribution graph
+* Total contribution count
+* Active days analytics
+* Current streak tracking
+* Longest streak tracking
+* Streak date ranges
+* Month labels
+* Real-time refresh timestamp (IST)
+* SVG-based rendering
+* Fully automated updates
+* Vercel deployment
 
 ---
 
 ## How It Works
 
-1. Fetches contribution data from GitHub.
-2. Parses contribution levels and dates.
-3. Generates a custom SVG contribution graph.
-4. Applies animated scanner effects.
-5. Serves the SVG through a Flask application.
-6. Deploys automatically on Vercel.
+1. Fetches contribution data directly from GitHub.
+2. Extracts contribution levels and activity dates.
+3. Calculates:
+
+   * Total Contributions
+   * Active Days
+   * Current Streak
+   * Longest Streak
+4. Generates a custom animated SVG dashboard.
+5. Applies synchronized scanner and glow effects.
+6. Serves the SVG through Flask.
+7. Deploys automatically using Vercel.
 
 ---
 
 ## Tech Stack
 
-- Python
-- Flask
-- BeautifulSoup4
-- Requests
-- SVG
-- Vercel
+* Python
+* Flask
+* Requests
+* BeautifulSoup4
+* SVG
+* Vercel
 
 ---
 
@@ -68,5 +77,22 @@ github-scanner
 ├── requirements.txt
 └── .gitignore
 ```
+
+---
+
+## Analytics Included
+
+* Total Contributions
+* Active Days
+* Current Contribution Streak
+* Longest Contribution Streak
+* Contribution Date Ranges
+* Last Refresh Timestamp
+
+---
+
+## License
+
+This project is licensed under the MIT License.
 
 ---
