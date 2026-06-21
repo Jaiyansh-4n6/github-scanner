@@ -1,6 +1,9 @@
 USERNAME = "Jaiyansh-4n6"
 
-def generate_svg(contribution_data, total_contributions, generated_at, month_labels):
+def generate_svg(contribution_data, total_contributions, generated_at, month_labels,
+                 current_streak, longest_streak, active_days,
+                 current_start, current_end,
+                 longest_start, longest_end):
   position_map = {}
   for item in contribution_data:
       position_map[(item["col"], item["row"])] = item["level"]
@@ -16,7 +19,7 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
   rows = 7
 
   canvas_w = x_start + cols * step + 120
-  canvas_h    = 370
+  canvas_h    = 570
   scan_travel = cols * step - cell
 
   beam_h_top  = y_start - 10
@@ -276,15 +279,99 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
   </g>
 
   ''')
+
   svg_parts.append(f"""
-<text x="40" y="{canvas_h - 20}"
+<text x="100" y="320"
       fill="#00ff88"
       font-size="14">
 Status: SCANNING   |   User: {USERNAME}   |   Target: Commits
 </text>
 
-</svg>
 """)
+
+  svg_parts.append(f"""
+<rect x="450" y="350"
+      width="470"
+      height="135"
+      rx="8"
+      fill="#061a2b"
+      stroke="#1d4d7a"
+      stroke-width="1"/>
+
+<line x1="620" y1="368" x2="620" y2="445"
+      stroke="#c58af9" stroke-width="1.5"/>
+
+<line x1="800" y1="368" x2="800" y2="445"
+      stroke="#c58af9" stroke-width="1.5"/>
+
+<!-- Active Days -->
+
+<text x="533" y="405"
+      fill="#c58af9"
+      font-size="24"
+      font-weight="bold"
+      text-anchor="middle">{active_days}</text>
+
+<text x="540" y="430"
+      fill="#c58af9"
+      font-size="14"
+      text-anchor="middle">Active Days</text>
+
+<text x="540" y="452"
+      fill="#7ee8e8"
+      font-size="11"
+      text-anchor="middle">Last 365 Days</text>
+
+<!-- Current Streak -->
+
+<circle cx="710" cy="402"
+        r="35"
+        fill="none"
+        stroke="#fff4a8"
+        stroke-width="4"/>
+
+<text x="710" y="375"
+      fill="#fff4a8"
+      font-size="22"
+      text-anchor="middle">🔥</text>
+
+<text x="710" y="412"
+      fill="#fff4a8"
+      font-size="24"
+      font-weight="bold"
+      text-anchor="middle">{current_streak}</text>
+
+<text x="710" y="455"
+      fill="#fff4a8"
+      font-size="15"
+      font-weight="bold"
+      text-anchor="middle">Current Streak</text>
+
+<text x="710" y="475"
+      fill="#7ee8e8"
+      font-size="11"
+      text-anchor="middle">{current_start} - {current_end}</text>
+
+<!-- Longest Streak -->
+
+<text x="860" y="405"
+      fill="#c58af9"
+      font-size="24"
+      font-weight="bold"
+      text-anchor="middle">{longest_streak}</text>
+
+<text x="860" y="430"
+      fill="#c58af9"
+      font-size="14"
+      text-anchor="middle">Longest Streak</text>
+
+<text x="860" y="452"
+      fill="#7ee8e8"
+      font-size="11"
+      text-anchor="middle">{longest_start} - {longest_end}</text>
+  </svg>    
+""")
+  
   svg_out = "".join(svg_parts)
   return svg_out  
 
