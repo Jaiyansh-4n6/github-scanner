@@ -5,8 +5,11 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
                  current_start, current_end,
                  longest_start, longest_end):
   position_map = {}
+  data_map = {}
+
   for item in contribution_data:
       position_map[(item["col"], item["row"])] = item["level"]
+      data_map[(item["col"], item["row"])] = item
 
 
 # Grid Settings
@@ -17,6 +20,11 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
   step    = cell + gap
   cols = max(item["col"] for item in contribution_data) + 1
   rows = 7
+
+  latest_date = max(
+    item["date"]
+    for item in contribution_data
+)
 
   canvas_w = x_start + cols * step + 120
   canvas_h    = 570
@@ -150,10 +158,35 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
           y = y_start + row * step
 
           # Dim base cell (always visible)
+          cell_data = data_map.get((col, row))
+          if cell_data:
+              date = cell_data["date"]
+              tooltip = cell_data.get("tooltip", date)
+          else:
+              date = ""
+              tooltip=""
+
+          if date == latest_date:
+
+            svg_parts.append(f'<ellipse cx="{x+55}" cy="{y-35}" rx="28" ry="18" fill="#fff4a8"/>')
+
+            svg_parts.append(f'<ellipse cx="{x+32}" cy="{y-28}" rx="10" ry="8" fill="#fff4a8"/>')
+
+            svg_parts.append(f'<ellipse cx="{x+20}" cy="{y-18}" rx="5" ry="4" fill="#fff4a8"/>')
+
+            svg_parts.append(
+              f'<text x="{x+55}" y="{y-30}" '
+              f'fill="#000000" '
+              f'font-size="10" '
+              f'font-weight="bold" '
+              f'text-anchor="middle">TODAY</text>')
+
           svg_parts.append(
-              f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" '
-              f'rx="2" fill="{dim_colors[level]}"/>\n'
-          )
+    f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" '
+    f'rx="2" fill="{dim_colors[level]}">'
+    f'<title>{tooltip}</title>'
+    f'</rect>\n'
+)
 
           if level == 0:
               continue
@@ -188,14 +221,15 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
           kv_str = ";".join(str(v)     for v in clean_v)
 
           svg_parts.append(
-              f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" '
-              f'rx="2" fill="{lit_colors[level]}" filter="url(#cellGlow)" opacity="0">\n'
-              f'  <animate attributeName="opacity"\n'
-              f'           values="{kv_str}" keyTimes="{kt_str}"\n'
-              f'           dur="{total_dur_s:.4f}s" repeatCount="indefinite"\n'
-              f'           calcMode="linear"/>\n'
-              f'</rect>\n'
-          )
+    f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" '
+    f'rx="2" fill="{lit_colors[level]}" filter="url(#cellGlow)" opacity="0">\n'
+    f'  <title>{tooltip}</title>\n'
+    f'  <animate attributeName="opacity"\n'
+    f'           values="{kv_str}" keyTimes="{kt_str}"\n'
+    f'           dur="{total_dur_s:.4f}s" repeatCount="indefinite"\n'
+    f'           calcMode="linear"/>\n'
+    f'</rect>\n'
+)
 
   # Grid border
   grid_x = x_start - 2
@@ -214,8 +248,8 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
 
     <!-- Outer halo -->
     <rect class="beam-halo"
-          x="{x_start - 16}" y="{beam_h_top}"
-          width="44" height="{beam_span}"
+          x="{x_start - 13}" y="{beam_h_top}"
+          width="36" height="{beam_span}"
           fill="#00ff88" rx="4"
           filter="url(#beamGlow)">
       <animateTransform attributeName="transform" type="translate"
