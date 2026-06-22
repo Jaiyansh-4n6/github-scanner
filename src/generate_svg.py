@@ -12,7 +12,7 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
       data_map[(item["col"], item["row"])] = item
 
 
-# Grid Settings
+  # Grid Settings
   x_start = 100
   y_start = 130
   cell    = 16
@@ -24,7 +24,7 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
   latest_date = max(
     item["date"]
     for item in contribution_data
-)
+  )
 
   canvas_w = x_start + cols * step + 120
   canvas_h    = 570
@@ -105,12 +105,12 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
     f'<text x="100" y="80" fill="#9cffc5" font-size="18">'
     f'{total_contributions} contributions in the last year'
     f'</text>'
-)
+  )
   svg_parts.append(
     f'<text x="100" y="100" fill="#6ddfa8" font-size="12">'
     f'Data Refreshed: {generated_at}'
     f'</text>'
-)
+  )
 
   # ── DAY LABELS ────────────────────────────────────────────────────────────────
   days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -164,29 +164,22 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
               tooltip = cell_data.get("tooltip", date)
           else:
               date = ""
-              tooltip=""
+              tooltip = ""
 
           if date == latest_date:
-
-            svg_parts.append(f'<ellipse cx="{x+55}" cy="{y-35}" rx="28" ry="18" fill="#fff4a8"/>')
-
-            svg_parts.append(f'<ellipse cx="{x+32}" cy="{y-28}" rx="10" ry="8" fill="#fff4a8"/>')
-
-            svg_parts.append(f'<ellipse cx="{x+20}" cy="{y-18}" rx="5" ry="4" fill="#fff4a8"/>')
-
             svg_parts.append(
-              f'<text x="{x+55}" y="{y-30}" '
-              f'fill="#000000" '
-              f'font-size="10" '
-              f'font-weight="bold" '
-              f'text-anchor="middle">TODAY</text>')
+              f'<rect x="{x-2}" y="{y-2}" '
+              f'width="{cell+4}" height="{cell+4}" '
+              f'rx="3" fill="none" '
+              f'stroke="#fff4a8" stroke-width="2"/>'
+          )
 
           svg_parts.append(
     f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" '
     f'rx="2" fill="{dim_colors[level]}">'
     f'<title>{tooltip}</title>'
     f'</rect>\n'
-)
+  )
 
           if level == 0:
               continue
@@ -229,7 +222,7 @@ def generate_svg(contribution_data, total_contributions, generated_at, month_lab
     f'           dur="{total_dur_s:.4f}s" repeatCount="indefinite"\n'
     f'           calcMode="linear"/>\n'
     f'</rect>\n'
-)
+  )
 
   # Grid border
   grid_x = x_start - 2
@@ -408,8 +401,4 @@ Status: SCANNING   |   User: {USERNAME}   |   Target: Commits
   
   svg_out = "".join(svg_parts)
   return svg_out  
-
-if __name__ == "__main__":
-    print("generate_svg.py loaded successfully")
-
     
