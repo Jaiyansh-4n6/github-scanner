@@ -40,12 +40,19 @@ def scanner():
     for row_index, tr in enumerate(rows):
         cells = tr.select("td[data-date]")
         for col_index, cell in enumerate(cells):
+            tooltip_tag = cell.find_next("tool-tip")
+            tooltip_text = ""
+            if tooltip_tag:
+                tooltip_text = tooltip_tag.get_text(strip=True)
+            print(tooltip_text)
             contribution_data.append({
-                "row": row_index,
-                "col": col_index,
-                "date": cell["data-date"],
-                "level": int(cell["data-level"])})
-    
+    "row": row_index,
+    "col": col_index,
+    "date": cell["data-date"],
+    "level": int(cell["data-level"]),
+    "tooltip": tooltip_text
+})
+
     active_days = sum(
         1 for item in contribution_data
         if item["level"] > 0
@@ -91,11 +98,17 @@ def scanner():
         else:
             break
 
-    current_start = datetime.strptime(current_start, "%Y-%m-%d").strftime("%b %d")
-    current_end = datetime.strptime(current_end, "%Y-%m-%d").strftime("%b %d")
+    if current_start:
+        current_start = datetime.strptime(current_start, "%Y-%m-%d").strftime("%b %d")
 
-    longest_start = datetime.strptime(longest_start, "%Y-%m-%d").strftime("%b %d")
-    longest_end = datetime.strptime(longest_end, "%Y-%m-%d").strftime("%b %d")
+    if current_end:
+        current_end = datetime.strptime(current_end, "%Y-%m-%d").strftime("%b %d")
+
+    if longest_start:
+        longest_start = datetime.strptime(longest_start, "%Y-%m-%d").strftime("%b %d")
+
+    if longest_end:
+        longest_end = datetime.strptime(longest_end, "%Y-%m-%d").strftime("%b %d")
 
     svg = generate_svg(contribution_data, total_contributions, generated_at,
                     month_labels, current_streak, longest_streak, active_days,
