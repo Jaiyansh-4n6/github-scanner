@@ -8,6 +8,8 @@ A GitHub contribution visualizer that fetches real contribution data from GitHub
   <img src="https://github-scanner-psi.vercel.app" alt="GitHub Contribution Scanner">
 </p>
 
+> 💡 Click the graph to explore the interactive contribution scanner.
+
 ---
 
 ## Live Demo
@@ -21,6 +23,8 @@ https://github-scanner-psi.vercel.app
 * Live GitHub contribution data
 * Animated scanner beam effect
 * Rolling 365-day contribution graph
+* Hover contribution details
+* Today activity indicator
 * Total contribution count
 * Active days analytics
 * Current streak tracking
@@ -29,6 +33,7 @@ https://github-scanner-psi.vercel.app
 * Month labels
 * Real-time refresh timestamp (IST)
 * SVG-based rendering
+* Synchronized scanner and glow effects
 * Fully automated updates
 * Vercel deployment
 
@@ -37,17 +42,25 @@ https://github-scanner-psi.vercel.app
 ## How It Works
 
 1. Fetches contribution data directly from GitHub.
-2. Extracts contribution levels and activity dates.
+
+2. Extracts contribution levels, dates, and activity details.
+
 3. Calculates:
 
    * Total Contributions
    * Active Days
    * Current Streak
    * Longest Streak
+
 4. Generates a custom animated SVG dashboard.
-5. Applies synchronized scanner and glow effects.
-6. Serves the SVG through Flask.
-7. Deploys automatically using Vercel.
+
+5. Adds interactive contribution tooltips and today indicators.
+
+6. Applies synchronized scanner and glow effects.
+
+7. Serves the SVG through Flask.
+
+8. Deploys automatically using Vercel.
 
 ---
 
@@ -88,6 +101,8 @@ github-scanner
 * Longest Contribution Streak
 * Contribution Date Ranges
 * Last Refresh Timestamp
+* Daily Contribution Details
+* Today's Activity Indicator
 
 ---
 
