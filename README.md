@@ -5,7 +5,7 @@ A GitHub contribution visualizer that fetches real contribution data from GitHub
 ## Preview
 
 <p align="center">
-  <img src="https://github-scanner-psi.vercel.app" alt="GitHub Contribution Scanner">
+  <img src="https://Jaiyansh-4n6-GitHubScanner.vercel.app" alt="GitHub Contribution Scanner">
 </p>
 
 > 💡 Click the graph to explore the interactive contribution scanner.
@@ -14,7 +14,7 @@ A GitHub contribution visualizer that fetches real contribution data from GitHub
 
 ## Live Demo
 
-https://github-scanner-psi.vercel.app
+https://Jaiyansh-4n6-GitHubScanner.vercel.app
 
 ---
 
